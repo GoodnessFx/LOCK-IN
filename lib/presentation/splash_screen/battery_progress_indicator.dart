@@ -194,6 +194,7 @@ class BatteryPainter extends CustomPainter {
     }
   }
 
+
   @override
   bool shouldRepaint(covariant BatteryPainter oldDelegate) {
     return oldDelegate.progress != progress ||

@@ -1,16 +1,16 @@
-# Lock In - React Native
+ Lock In 
 
-A gamified skill development app converted from Flutter to React Native, featuring beautiful UI/UX, progress tracking, community features, and achievement systems.
+A gamified skill development app with React Native, featuring progress tracking, community features, and achievement systems.
 
-## Features
+ Features
 
-- 🎮 **Gamified Experience**: Battery progress indicators, achievement badges, and point systems
-- 📊 **Progress Tracking**: Detailed progress logging with categories and time tracking
-- 👥 **Community Feed**: Share progress, get inspired, and connect with other learners
-- 🏆 **Achievement System**: Unlock badges and track your learning milestones
-- 🎨 **Beautiful UI**: Modern design with smooth animations and responsive layouts
-- 🌙 **Dark Mode Support**: Toggle between light and dark themes
-- 📱 **Cross-Platform**: Runs on both iOS and Android
+- 🎮 Gamified Experience: Battery progress indicators, achievement badges, and point systems
+- 📊 Progress Tracking: Detailed progress logging with categories and time tracking
+- 👥 Community Feed: Share progress, get inspired, and connect with other learners
+- 🏆 Achievement System: Unlock badges and track your learning milestones
+- 🎨 Beautiful UI: Modern design with smooth animations and responsive layouts
+- 🌙 Dark Mode Support: Toggle between light and dark themes
+- 📱 Cross-Platform: Runs on both iOS and Android
 
 ## Screenshots
 

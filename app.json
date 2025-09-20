@@ -1,4 +1,10 @@
 {
-  "name": "LockIn",
-  "displayName": "LOCK IN"
+  "expo": {
+    "name": "LockIn",
+    "slug": "lock-in",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "platforms": ["ios", "android", "web"],
+    "sdkVersion": "54.0.0"
+  }
 }

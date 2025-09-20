@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StatusBar, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -5,7 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons'; // Web-compatible icons
 
 // Import screens
 import SplashScreen from './screens/SplashScreen';
@@ -19,6 +20,10 @@ import UserProfile from './screens/UserProfile';
 // Import theme
 import { Colors } from './theme/AppTheme';
 
+// Optimize navigation for performance
+import { enableScreens } from 'react-native-screens';
+enableScreens();
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -27,22 +32,16 @@ function BottomTabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === 'Dashboard') {
-            iconName = 'home';
-          } else if (route.name === 'Progress') {
-            iconName = 'timeline';
-          } else if (route.name === 'LOCK IN') {
-            iconName = 'school';
-          } else if (route.name === 'Community') {
-            iconName = 'people';
-          } else if (route.name === 'Profile') {
-            iconName = 'person';
-          }
+          if (route.name === 'Dashboard') iconName = 'home';
+          else if (route.name === 'Progress') iconName = 'timeline';
+          else if (route.name === 'LOCK IN') iconName = 'school';
+          else if (route.name === 'Community') iconName = 'people';
+          else if (route.name === 'Profile') iconName = 'person';
 
-          return <Icon name={iconName} size={size} color={color} />;
+          return <MaterialIcons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: Colors.primaryLight,
         tabBarInactiveTintColor: Colors.textSecondaryLight,
@@ -61,41 +60,11 @@ function BottomTabNavigator() {
         headerShown: false,
       })}
     >
-      <Tab.Screen 
-        name="Dashboard" 
-        component={DashboardHome}
-        options={{
-          tabBarLabel: 'Home',
-        }}
-      />
-      <Tab.Screen 
-        name="Progress" 
-        component={ProgressTracking}
-        options={{
-          tabBarLabel: 'Progress',
-        }}
-      />
-      <Tab.Screen 
-        name="LOCK IN" 
-        component={LockInLearn}
-        options={{
-          tabBarLabel: 'LOCK IN',
-        }}
-      />
-      <Tab.Screen 
-        name="Community" 
-        component={CommunityFeed}
-        options={{
-          tabBarLabel: 'Community',
-        }}
-      />
-      <Tab.Screen 
-        name="Profile" 
-        component={UserProfile}
-        options={{
-          tabBarLabel: 'Profile',
-        }}
-      />
+      <Tab.Screen name="Dashboard" component={DashboardHome} />
+      <Tab.Screen name="Progress" component={ProgressTracking} />
+      <Tab.Screen name="LOCK IN" component={LockInLearn} />
+      <Tab.Screen name="Community" component={CommunityFeed} />
+      <Tab.Screen name="Profile" component={UserProfile} />
     </Tab.Navigator>
   );
 }
@@ -117,12 +86,13 @@ function AppNavigator() {
   );
 }
 
+// Root App
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <StatusBar 
-          barStyle="dark-content" 
+        <StatusBar
+          barStyle="dark-content"
           backgroundColor={Colors.backgroundLight}
           translucent={false}
         />

@@ -39,29 +39,6 @@ The app includes the following main screens:
    cd lock-in-react-native
    ```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **iOS Setup** (macOS only)
-   ```bash
-   cd ios
-   pod install
-   cd ..
-   ```
-
-4. **Run the app**
-   
-   For Android:
-   ```bash
-   npm run android
-   ```
-   
-   For iOS:
-   ```bash
-   npm run ios
-   ```
 
 ## Project Structure
 
@@ -84,21 +61,6 @@ src/
 └── App.js              # Main app component
 ```
 
-## Key Dependencies
-
-- **Navigation**: `@react-navigation/native`, `@react-navigation/stack`, `@react-navigation/bottom-tabs`
-- **State Management**: `redux`, `react-redux`, `@reduxjs/toolkit`
-- **Storage**: `@react-native-async-storage/async-storage`
-- **Networking**: `axios`
-- **Animations**: `react-native-reanimated`, `react-native-gesture-handler`
-- **Icons**: `react-native-vector-icons`
-- **Images**: `react-native-fast-image`
-- **SVG**: `react-native-svg`
-- **Gradients**: `react-native-linear-gradient`
-- **Haptic Feedback**: `react-native-haptic-feedback`
-- **Network Info**: `@react-native-community/netinfo`
-
-## Features Converted from Flutter
 
 ### UI Components
 - ✅ Battery progress indicators with smooth animations
@@ -124,63 +86,6 @@ src/
 - ✅ Fade and slide transitions
 - ✅ Haptic feedback integration
 
-## Customization
-
-### Theming
-The app uses a comprehensive theming system in `src/theme/AppTheme.js`:
-- Color palettes for light and dark modes
-- Typography scales
-- Spacing and border radius constants
-- Responsive dimension helpers
-- Shadow definitions
-
-### Adding New Features
-1. Create new components in `src/components/`
-2. Add new screens in `src/screens/`
-3. Update navigation in `src/App.js`
-4. Add new dependencies to `package.json`
-
-## Building for Production
-
-### Android
-```bash
-npm run build:android
-```
-
-### iOS
-```bash
-npm run build:ios
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Metro bundler issues**
-   ```bash
-   npx react-native start --reset-cache
-   ```
-
-2. **iOS build issues**
-   ```bash
-   cd ios
-   pod install
-   cd ..
-   ```
-
-3. **Android build issues**
-   ```bash
-   cd android
-   ./gradlew clean
-   cd ..
-   ```
-
-### Performance Optimization
-
-- Images are optimized using `react-native-fast-image`
-- Animations use native drivers where possible
-- Lists are optimized with proper key props
-- Memory management with proper cleanup
 
 ## Contributing
 

@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 import CustomIcon from '../components/CustomIcon';
+import DoorLottie from '../components/animations/DoorLottie';
+import ErrorBoundary from '../components/ErrorBoundary';
 import BatteryProgressIndicator from '../components/BatteryProgressIndicator';
 import CountdownTimer from '../components/CountdownTimer';
 import { Colors, Typography, Spacing, responsiveWidth, responsiveHeight } from '../theme/AppTheme';
@@ -191,6 +193,7 @@ const SplashScreen = () => {
   countdownTarget.setDate(countdownTarget.getDate() + 180);
 
   return (
+    <ErrorBoundary>
     <View style={styles.container}>
       <StatusBar hidden />
       <Animated.View style={[styles.background, { opacity: backgroundAnim }]}>
@@ -214,9 +217,12 @@ const SplashScreen = () => {
 
             {/* Main content area */}
             <View style={styles.mainContent}>
-              {/* Animated logo */}
+              {/* Lottie door animation + logo */}
               <View style={styles.logoContainer}>
-                <CustomIcon name="lock" size={responsiveWidth(30)} color="white" />
+                <View style={{ width: responsiveWidth(40), height: responsiveWidth(40) }}>
+                  <DoorLottie loop={false} source={undefined} />
+                </View>
+                <CustomIcon name="lock" size={responsiveWidth(18)} color="white" />
               </View>
 
               <Text style={[styles.tagline, Typography.headlineSmall, { color: 'white' }]}>
@@ -267,6 +273,7 @@ const SplashScreen = () => {
         </LinearGradient>
       </Animated.View>
     </View>
+    </ErrorBoundary>
   );
 };
 

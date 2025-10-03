@@ -16,6 +16,7 @@ import CustomIcon from '../components/CustomIcon';
 import CustomImage from '../components/CustomImage';
 import BatteryProgressIndicator from '../components/BatteryProgressIndicator';
 import CountdownTimer from '../components/CountdownTimer';
+import LiveClock from '../components/LiveClock';
 import { Colors, Typography, Spacing, BorderRadius, responsiveWidth, responsiveHeight } from '../theme/AppTheme';
 
 const DashboardHome = () => {
@@ -211,7 +212,7 @@ const DashboardHome = () => {
         }
         showsVerticalScrollIndicator={false}
       >
-        {/* Custom App Bar with countdown timer */}
+        {/* Custom App Bar with countdown timer and live clock at top-right */}
         <View style={styles.appBar}>
           <View style={styles.greetingContainer}>
             <Text style={[styles.greeting, Typography.titleLarge, { color: Colors.textPrimaryLight }]}>
@@ -232,7 +233,11 @@ const DashboardHome = () => {
               </View>
             </View>
           </View>
-          <CountdownTimer targetDate={targetDate} />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <CountdownTimer targetDate={targetDate} />
+            <View style={{ width: 8 }} />
+            <LiveClock />
+          </View>
         </View>
 
         {/* Hero progress card */}

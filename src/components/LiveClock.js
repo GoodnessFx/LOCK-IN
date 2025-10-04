@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Colors, Typography, BorderRadius } from '../theme/AppTheme';
+import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { Colors, Typography, BorderRadius, DarkTheme } from '../theme/AppTheme';
 
 // Minimal live clock. Shows local time HH:mm with subtle chip styling.
 export default function LiveClock() {
   const [now, setNow] = useState(new Date());
+  const isDarkMode = useColorScheme() === 'dark';
+  const theme = isDarkMode ? DarkTheme : { colors: Colors };
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000 * 30);
@@ -15,8 +17,11 @@ export default function LiveClock() {
   const mm = now.getMinutes().toString().padStart(2, '0');
 
   return (
-    <View style={styles.container}>
-      <Text style={[styles.text, Typography.labelMedium, { color: Colors.textPrimaryLight }]}>{`${hh}:${mm}`}</Text>
+    <View style={[styles.container, { 
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border 
+    }]}>
+      <Text style={[styles.text, Typography.labelMedium, { color: theme.colors.text }]}>{`${hh}:${mm}`}</Text>
     </View>
   );
 }

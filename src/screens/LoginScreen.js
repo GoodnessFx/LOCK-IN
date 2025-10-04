@@ -9,6 +9,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  useColorScheme,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,7 +17,7 @@ import HapticFeedback from 'react-native-haptic-feedback';
 
 import CustomIcon from '../components/CustomIcon';
 import BatteryProgressIndicator from '../components/BatteryProgressIndicator';
-import { Colors, Typography, Spacing, BorderRadius, responsiveWidth, responsiveHeight } from '../theme/AppTheme';
+import { Colors, Typography, Spacing, BorderRadius, responsiveWidth, responsiveHeight, DarkTheme } from '../theme/AppTheme';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -25,6 +26,8 @@ const LoginScreen = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const isDarkMode = useColorScheme() === 'dark';
+  const theme = isDarkMode ? DarkTheme : { colors: Colors };
 
   const mockCredentials = {
     'admin@lockin.com': 'admin123',
@@ -96,7 +99,7 @@ const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView 
-      style={styles.container} 
+      style={[styles.container, { backgroundColor: theme.colors.background }]} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView 
@@ -106,18 +109,18 @@ const LoginScreen = () => {
         <View style={styles.content}>
           {/* Lock In Logo */}
           <View style={styles.logoContainer}>
-            <CustomIcon name="lock" size={responsiveWidth(20)} color={Colors.primaryLight} />
-            <Text style={[styles.logoText, Typography.headlineMedium, { color: Colors.primaryLight }]}>
+            <CustomIcon name="lock" size={responsiveWidth(20)} color={theme.colors.primary} />
+            <Text style={[styles.logoText, Typography.headlineMedium, { color: theme.colors.primary }]}>
               Lock In
             </Text>
           </View>
 
           {/* Welcome text */}
-          <Text style={[styles.welcomeText, Typography.headlineMedium, { color: Colors.textPrimaryLight }]}>
+          <Text style={[styles.welcomeText, Typography.headlineMedium, { color: theme.colors.text }]}>
             Welcome Back
           </Text>
 
-          <Text style={[styles.subtitle, Typography.bodyLarge, { color: Colors.textSecondaryLight }]}>
+          <Text style={[styles.subtitle, Typography.bodyLarge, { color: theme.colors.textSecondary }]}>
             Continue your skill development journey
           </Text>
 
@@ -128,16 +131,19 @@ const LoginScreen = () => {
                 progress={loadingProgress}
                 width={responsiveWidth(30)}
                 height={responsiveHeight(8)}
-                batteryColor={Colors.primaryLight}
+                batteryColor={theme.colors.primary}
               />
             </View>
           )}
 
           {/* Error Message */}
           {errorMessage ? (
-            <View style={styles.errorContainer}>
-              <CustomIcon name="error-outline" size={20} color={Colors.warningLight} />
-              <Text style={[styles.errorText, Typography.bodyMedium, { color: Colors.warningLight }]}>
+            <View style={[styles.errorContainer, { 
+              backgroundColor: theme.colors.warning + '1A',
+              borderColor: theme.colors.warning + '4D'
+            }]}>
+              <CustomIcon name="error-outline" size={20} color={theme.colors.warning} />
+              <Text style={[styles.errorText, Typography.bodyMedium, { color: theme.colors.warning }]}>
                 {errorMessage}
               </Text>
             </View>
@@ -146,13 +152,17 @@ const LoginScreen = () => {
           {/* Login Form */}
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <Text style={[styles.inputLabel, Typography.labelMedium, { color: Colors.textSecondaryLight }]}>
+              <Text style={[styles.inputLabel, Typography.labelMedium, { color: theme.colors.textSecondary }]}>
                 Email
               </Text>
               <TextInput
-                style={[styles.input, Typography.bodyLarge]}
+                style={[styles.input, Typography.bodyLarge, { 
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                  color: theme.colors.text
+                }]}
                 placeholder="Enter your email"
-                placeholderTextColor={Colors.textSecondaryLight}
+                placeholderTextColor={theme.colors.textSecondary}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -163,13 +173,17 @@ const LoginScreen = () => {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={[styles.inputLabel, Typography.labelMedium, { color: Colors.textSecondaryLight }]}>
+              <Text style={[styles.inputLabel, Typography.labelMedium, { color: theme.colors.textSecondary }]}>
                 Password
               </Text>
               <TextInput
-                style={[styles.input, Typography.bodyLarge]}
+                style={[styles.input, Typography.bodyLarge, { 
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                  color: theme.colors.text
+                }]}
                 placeholder="Enter your password"
-                placeholderTextColor={Colors.textSecondaryLight}
+                placeholderTextColor={theme.colors.textSecondary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -178,7 +192,10 @@ const LoginScreen = () => {
             </View>
 
             <TouchableOpacity
-              style={[styles.loginButton, { opacity: isLoading ? 0.6 : 1 }]}
+              style={[styles.loginButton, { 
+                backgroundColor: theme.colors.primary,
+                opacity: isLoading ? 0.6 : 1 
+              }]}
               onPress={handleLogin}
               disabled={isLoading}
             >
@@ -190,29 +207,37 @@ const LoginScreen = () => {
 
           {/* Social Login */}
           <View style={styles.socialContainer}>
-            <Text style={[styles.socialText, Typography.bodyMedium, { color: Colors.textSecondaryLight }]}>
+            <Text style={[styles.socialText, Typography.bodyMedium, { color: theme.colors.textSecondary }]}>
               Or continue with
             </Text>
 
             <View style={styles.socialButtons}>
               <TouchableOpacity
-                style={[styles.socialButton, { opacity: isLoading ? 0.6 : 1 }]}
+                style={[styles.socialButton, { 
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                  opacity: isLoading ? 0.6 : 1 
+                }]}
                 onPress={() => handleSocialLogin('google')}
                 disabled={isLoading}
               >
-                <CustomIcon name="google" size={24} color={Colors.primaryLight} />
-                <Text style={[styles.socialButtonText, Typography.labelMedium, { color: Colors.primaryLight }]}>
+                <CustomIcon name="google" size={24} color={theme.colors.primary} />
+                <Text style={[styles.socialButtonText, Typography.labelMedium, { color: theme.colors.primary }]}>
                   Google
                 </Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.socialButton, { opacity: isLoading ? 0.6 : 1 }]}
+                style={[styles.socialButton, { 
+                  backgroundColor: theme.colors.surface,
+                  borderColor: theme.colors.border,
+                  opacity: isLoading ? 0.6 : 1 
+                }]}
                 onPress={() => handleSocialLogin('apple')}
                 disabled={isLoading}
               >
-                <CustomIcon name="apple" size={24} color={Colors.textPrimaryLight} />
-                <Text style={[styles.socialButtonText, Typography.labelMedium, { color: Colors.textPrimaryLight }]}>
+                <CustomIcon name="apple" size={24} color={theme.colors.text} />
+                <Text style={[styles.socialButtonText, Typography.labelMedium, { color: theme.colors.text }]}>
                   Apple
                 </Text>
               </TouchableOpacity>
@@ -221,14 +246,14 @@ const LoginScreen = () => {
 
           {/* Sign up link */}
           <View style={styles.signupContainer}>
-            <Text style={[Typography.bodyMedium, { color: Colors.textSecondaryLight }]}>
+            <Text style={[Typography.bodyMedium, { color: theme.colors.textSecondary }]}>
               New to Lock In?{' '}
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('Register')}
               disabled={isLoading}
             >
-              <Text style={[Typography.bodyMedium, { color: Colors.primaryLight, fontWeight: '600' }]}>
+              <Text style={[Typography.bodyMedium, { color: theme.colors.primary, fontWeight: '600' }]}>
                 Start Journey
               </Text>
             </TouchableOpacity>
@@ -242,7 +267,6 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.backgroundLight,
   },
   scrollContent: {
     flexGrow: 1,
@@ -276,11 +300,9 @@ const styles = StyleSheet.create({
   errorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.warningLight + '1A',
     padding: Spacing.lg,
     borderRadius: BorderRadius.lg,
     borderWidth: 1,
-    borderColor: Colors.warningLight + '4D',
     marginBottom: responsiveHeight(3),
   },
   errorText: {
@@ -297,16 +319,12 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   input: {
-    backgroundColor: Colors.surfaceLight,
     borderWidth: 1,
-    borderColor: Colors.borderSubtleLight,
     borderRadius: BorderRadius.lg,
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.lg,
-    color: Colors.textPrimaryLight,
   },
   loginButton: {
-    backgroundColor: Colors.primaryLight,
     paddingVertical: Spacing.lg,
     borderRadius: BorderRadius.lg,
     alignItems: 'center',
@@ -331,12 +349,10 @@ const styles = StyleSheet.create({
   socialButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surfaceLight,
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.lg,
     borderRadius: BorderRadius.lg,
     borderWidth: 1,
-    borderColor: Colors.borderSubtleLight,
     minWidth: responsiveWidth(35),
     justifyContent: 'center',
   },

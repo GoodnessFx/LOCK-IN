@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, useColorScheme } from 'react-native';
 import CustomIcon from './CustomIcon';
-import { Colors, Typography, BorderRadius, responsiveWidth, responsiveHeight } from '../theme/AppTheme';
+import { Colors, Typography, BorderRadius, responsiveWidth, responsiveHeight, DarkTheme } from '../theme/AppTheme';
 
 const CountdownTimer = ({ 
   targetDate, 
@@ -12,6 +12,8 @@ const CountdownTimer = ({
 }) => {
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const pulseAnim = useRef(new Animated.Value(1)).current;
+  const isDarkMode = useColorScheme() === 'dark';
+  const theme = isDarkMode ? DarkTheme : { colors: Colors };
 
   useEffect(() => {
     const updateTimer = () => {
@@ -74,7 +76,7 @@ const CountdownTimer = ({
       <View style={[
         styles.timerContainer,
         { 
-          backgroundColor: backgroundColor || Colors.accentLight + '1A',
+          backgroundColor: backgroundColor || theme.colors.accent + '1A',
           paddingHorizontal: (padding && padding.horizontal) || 12,
           paddingVertical: (padding && padding.vertical) || 6
         }
@@ -82,13 +84,13 @@ const CountdownTimer = ({
         <CustomIcon 
           name="timer" 
           size={16} 
-          color={Colors.accentLight} 
+          color={theme.colors.accent} 
         />
         <Text style={[
           styles.timerText,
           textStyle || {
             ...Typography.labelMedium,
-            color: Colors.accentLight,
+            color: theme.colors.accent,
             fontWeight: '600',
             letterSpacing: 0.5,
           }

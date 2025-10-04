@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, useColorScheme, Alert } from 'react-native';
 import CustomIcon from '../components/CustomIcon';
 import CustomImage from '../components/CustomImage';
-import { Colors, Typography, Spacing, BorderRadius, responsiveWidth, responsiveHeight } from '../theme/AppTheme';
+import BatteryProgressIndicator from '../components/BatteryProgressIndicator';
+import { Colors, Typography, Spacing, BorderRadius, responsiveWidth, responsiveHeight, DarkTheme } from '../theme/AppTheme';
+import aiService from '../services/ai/AiService';
 
 const categories = [
   { key: 'tech', label: 'Tech', color: Colors.primaryLight, icon: 'memory' },
@@ -38,16 +40,58 @@ const courseCatalog = {
 
 export default function LockInLearn() {
   const [active, setActive] = useState('tech');
+  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [learningProgress, setLearningProgress] = useState(0.65);
+  const isDarkMode = useColorScheme() === 'dark';
+  const theme = isDarkMode ? DarkTheme : { colors: Colors };
 
   const courses = courseCatalog[active] || [];
 
+  useEffect(() => {
+    loadAISuggestions();
+  }, [active]);
+
+  const loadAISuggestions = async () => {
+    setIsLoadingSuggestions(true);
+    try {
+      const suggestions = await aiService.suggestCatchUp({
+        lastActiveDays: 2,
+        preferredTopics: [active]
+      });
+      setAiSuggestions(suggestions);
+    } catch (error) {
+      console.log('AI suggestions failed:', error);
+      setAiSuggestions([
+        'Review your last lesson notes',
+        'Practice with a quick exercise',
+        'Watch a 10-minute tutorial'
+      ]);
+    }
+    setIsLoadingSuggestions(false);
+  };
+
+  const startCourse = (course) => {
+    Alert.alert(
+      'Start Learning',
+      `Begin "${course.title}"? This will start your focused learning session.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Start', onPress: () => {
+          // Start learning session
+          setLearningProgress(Math.min(learningProgress + 0.1, 1.0));
+        }}
+      ]
+    );
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={[styles.headerTitle, Typography.titleLarge, { color: Colors.textPrimaryLight }]}>Learn</Text>
+        <Text style={[styles.headerTitle, Typography.titleLarge, { color: theme.colors.text }]}>Learn</Text>
         <View style={styles.headerRight}>
-          <CustomIcon name="search" size={22} color={Colors.textSecondaryLight} />
+          <CustomIcon name="search" size={22} color={theme.colors.textSecondary} />
         </View>
       </View>
 
@@ -56,44 +100,102 @@ export default function LockInLearn() {
         {categories.map(cat => (
           <TouchableOpacity
             key={cat.key}
-            style={[styles.categoryChip, active === cat.key && { backgroundColor: cat.color }]}
+            style={[styles.categoryChip, { 
+              backgroundColor: active === cat.key ? cat.color : theme.colors.surface,
+              borderColor: theme.colors.border
+            }]}
             onPress={() => setActive(cat.key)}
           >
             <CustomIcon name={cat.icon} size={18} color={active === cat.key ? 'white' : cat.color} />
-            <Text style={[styles.categoryText, Typography.labelMedium, { color: active === cat.key ? 'white' : Colors.textSecondaryLight }]}>
+            <Text style={[styles.categoryText, Typography.labelMedium, { color: active === cat.key ? 'white' : theme.colors.textSecondary }]}>
               {cat.label}
             </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
 
+      {/* AI Learning Assistant */}
+      <View style={[styles.aiAssistantCard, { 
+        backgroundColor: theme.colors.surface,
+        borderColor: theme.colors.border
+      }]}>
+        <View style={styles.aiHeader}>
+          <CustomIcon name="psychology" size={20} color={theme.colors.primary} />
+          <Text style={[styles.aiTitle, Typography.titleSmall, { color: theme.colors.text }]}>
+            AI Learning Assistant
+          </Text>
+        </View>
+        
+        <View style={styles.progressSection}>
+          <Text style={[styles.progressLabel, Typography.bodySmall, { color: theme.colors.textSecondary }]}>
+            Your Progress
+          </Text>
+          <BatteryProgressIndicator
+            progress={learningProgress}
+            width={responsiveWidth(25)}
+            height={responsiveHeight(6)}
+            batteryColor={theme.colors.primary}
+          />
+        </View>
+
+        <Text style={[styles.aiSubtitle, Typography.bodySmall, { color: theme.colors.textSecondary }]}>
+          Personalized suggestions for {active} learning:
+        </Text>
+        
+        {isLoadingSuggestions ? (
+          <View style={styles.loadingContainer}>
+            <CustomIcon name="refresh" size={16} color={theme.colors.textSecondary} />
+            <Text style={[Typography.bodySmall, { color: theme.colors.textSecondary, marginLeft: 8 }]}>
+              Getting AI suggestions...
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.suggestionsContainer}>
+            {aiSuggestions.map((suggestion, index) => (
+              <TouchableOpacity key={index} style={styles.suggestionItem}>
+                <CustomIcon name="lightbulb-outline" size={14} color={theme.colors.accent} />
+                <Text style={[styles.suggestionText, Typography.bodySmall, { color: theme.colors.text }]}>
+                  {suggestion}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </View>
+
       {/* Featured track */}
-      <View style={styles.featuredCard}>
+      <View style={[styles.featuredCard, { 
+        backgroundColor: theme.colors.surface,
+        borderColor: theme.colors.border
+      }]}>
         <View style={styles.featuredLeft}>
-          <Text style={[styles.featuredTitle, Typography.titleMedium, { color: Colors.textPrimaryLight }]}>Your Learning Path</Text>
-          <Text style={[styles.featuredSubtitle, Typography.bodySmall, { color: Colors.textSecondaryLight }]}>Personalized modules to reach mastery</Text>
+          <Text style={[styles.featuredTitle, Typography.titleMedium, { color: theme.colors.text }]}>Your Learning Path</Text>
+          <Text style={[styles.featuredSubtitle, Typography.bodySmall, { color: theme.colors.textSecondary }]}>Personalized modules to reach mastery</Text>
         </View>
         <View style={styles.featuredRight}>
-          <CustomIcon name="school" size={28} color={Colors.primaryLight} />
+          <CustomIcon name="school" size={28} color={theme.colors.primary} />
         </View>
       </View>
 
       {/* Courses list */}
       <ScrollView style={styles.courses} showsVerticalScrollIndicator={false}>
         {courses.map((course, idx) => (
-          <TouchableOpacity key={idx} style={styles.courseCard}>
+          <TouchableOpacity key={idx} style={[styles.courseCard, { 
+            backgroundColor: theme.colors.surface,
+            borderColor: theme.colors.border
+          }]} onPress={() => startCourse(course)}>
             <CustomImage source={course.image} width={responsiveWidth(26)} height={responsiveHeight(12)} style={styles.courseImage} />
             <View style={styles.courseInfo}>
-              <Text style={[styles.courseTitle, Typography.titleSmall, { color: Colors.textPrimaryLight }]}>{course.title}</Text>
-              <Text style={[styles.courseMeta, Typography.bodySmall, { color: Colors.textSecondaryLight }]}>
+              <Text style={[styles.courseTitle, Typography.titleSmall, { color: theme.colors.text }]}>{course.title}</Text>
+              <Text style={[styles.courseMeta, Typography.bodySmall, { color: theme.colors.textSecondary }]}>
                 {course.level} • {course.duration}
               </Text>
               <View style={styles.courseActions}>
-                <View style={styles.badgePrimary}>
+                <View style={[styles.badgePrimary, { backgroundColor: theme.colors.primary }]}>
                   <Text style={[styles.badgeText, Typography.labelSmall, { color: 'white' }]}>Start</Text>
                 </View>
                 <TouchableOpacity>
-                  <Text style={[styles.secondaryAction, Typography.labelSmall, { color: Colors.primaryLight }]}>Details</Text>
+                  <Text style={[styles.secondaryAction, Typography.labelSmall, { color: theme.colors.primary }]}>Details</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -108,7 +210,6 @@ export default function LockInLearn() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.backgroundLight,
   },
   header: {
     flexDirection: 'row',
@@ -133,9 +234,7 @@ const styles = StyleSheet.create({
   categoryChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.surfaceLight,
     borderWidth: 1,
-    borderColor: Colors.borderSubtleLight,
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.md,
     borderRadius: BorderRadius.lg,
@@ -145,8 +244,51 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.sm,
     fontWeight: '600',
   },
+  aiAssistantCard: {
+    borderRadius: BorderRadius.lg,
+    padding: Spacing.lg,
+    marginHorizontal: responsiveWidth(4),
+    marginBottom: responsiveHeight(2),
+    borderWidth: 1,
+  },
+  aiHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  aiTitle: {
+    marginLeft: Spacing.sm,
+    fontWeight: '600',
+  },
+  progressSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: Spacing.md,
+  },
+  progressLabel: {
+    fontWeight: '500',
+  },
+  aiSubtitle: {
+    marginBottom: Spacing.sm,
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  suggestionsContainer: {
+    marginTop: Spacing.sm,
+  },
+  suggestionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Spacing.xs,
+  },
+  suggestionText: {
+    marginLeft: Spacing.sm,
+    flex: 1,
+  },
   featuredCard: {
-    backgroundColor: Colors.surfaceLight,
     borderRadius: BorderRadius.lg,
     padding: Spacing.lg,
     marginHorizontal: responsiveWidth(4),
@@ -155,7 +297,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderColor: Colors.borderSubtleLight,
   },
   featuredLeft: { flex: 1 },
   featuredRight: { marginLeft: Spacing.lg },
@@ -166,12 +307,10 @@ const styles = StyleSheet.create({
   },
   courseCard: {
     flexDirection: 'row',
-    backgroundColor: Colors.surfaceLight,
     borderRadius: BorderRadius.lg,
     padding: Spacing.lg,
     marginBottom: Spacing.lg,
     borderWidth: 1,
-    borderColor: Colors.borderSubtleLight,
   },
   courseImage: {
     borderRadius: BorderRadius.md,
@@ -192,7 +331,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   badgePrimary: {
-    backgroundColor: Colors.primaryLight,
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.lg,

@@ -8,6 +8,7 @@ import {
   RefreshControl,
   Alert,
   Modal,
+  useColorScheme,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import HapticFeedback from 'react-native-haptic-feedback';
@@ -17,12 +18,14 @@ import CustomImage from '../components/CustomImage';
 import BatteryProgressIndicator from '../components/BatteryProgressIndicator';
 import CountdownTimer from '../components/CountdownTimer';
 import LiveClock from '../components/LiveClock';
-import { Colors, Typography, Spacing, BorderRadius, responsiveWidth, responsiveHeight } from '../theme/AppTheme';
+import { Colors, Typography, Spacing, BorderRadius, responsiveWidth, responsiveHeight, DarkTheme } from '../theme/AppTheme';
 
 const DashboardHome = () => {
   const navigation = useNavigation();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [showQuickLogModal, setShowQuickLogModal] = useState(false);
+  const isDarkMode = useColorScheme() === 'dark';
+  const theme = isDarkMode ? DarkTheme : { colors: Colors };
 
   // Mock user data
   const userData = {
@@ -204,7 +207,7 @@ const DashboardHome = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
         style={styles.scrollView}
         refreshControl={
@@ -213,28 +216,32 @@ const DashboardHome = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Custom App Bar with countdown timer and live clock at top-right */}
-        <View style={styles.appBar}>
+        <View style={[styles.appBar, { backgroundColor: theme.colors.background }]}>
           <View style={styles.greetingContainer}>
-            <Text style={[styles.greeting, Typography.titleLarge, { color: Colors.textPrimaryLight }]}>
+            <Text style={[styles.greeting, Typography.titleLarge, { color: theme.colors.text }]}>
               Good {getGreeting()}, {userData.name}!
             </Text>
             <View style={styles.statsContainer}>
               <View style={styles.statItem}>
-                <CustomIcon name="stars" size={16} color={Colors.accentLight} />
-                <Text style={[styles.statText, Typography.bodyMedium, { color: Colors.accentLight }]}>
+                <CustomIcon name="stars" size={16} color={theme.colors.accent} />
+                <Text style={[styles.statText, Typography.bodyMedium, { color: theme.colors.accent }]}>
                   {userData.igPoints} IG Points
                 </Text>
               </View>
               <View style={styles.statItem}>
-                <CustomIcon name="local-fire-department" size={16} color={Colors.warningLight} />
-                <Text style={[styles.statText, Typography.bodyMedium, { color: Colors.warningLight }]}>
+                <CustomIcon name="local-fire-department" size={16} color={theme.colors.warning} />
+                <Text style={[styles.statText, Typography.bodyMedium, { color: theme.colors.warning }]}>
                   {userData.streak} day streak
                 </Text>
               </View>
             </View>
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <CountdownTimer targetDate={targetDate} />
+          <View style={styles.timerContainer}>
+            <CountdownTimer 
+              targetDate={targetDate} 
+              backgroundColor={theme.colors.surface}
+              textStyle={{ color: theme.colors.accent }}
+            />
             <View style={{ width: 8 }} />
             <LiveClock />
           </View>
@@ -513,6 +520,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: responsiveWidth(4),
     paddingVertical: responsiveHeight(2),
+  },
+  timerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'absolute',
+    top: responsiveHeight(2),
+    right: responsiveWidth(4),
   },
   greetingContainer: {
     flex: 1,

@@ -19,7 +19,7 @@ class AiService {
   // Summarize a finished focus session and propose next steps
   async summarizeSession({ durationMinutes, tasks = [], notes = '', context = {} }) {
     if (!this.isConfigured) {
-      return this.#fallbackSummary({ durationMinutes, tasks, notes });
+      return this._fallbackSummary({ durationMinutes, tasks, notes });
     }
 
     const prompt = [
@@ -30,8 +30,8 @@ class AiService {
       `Notes: ${notes || 'N/A'}`,
     ].join('\n');
 
-    const content = await this.#chat(prompt, context);
-    return { summary: content, suggestions: this.#extractSuggestions(content) };
+    const content = await this._chat(prompt, context);
+    return { summary: content, suggestions: this._extractSuggestions(content) };
   }
 
   // Generate catch-up suggestions for inactivity
@@ -50,11 +50,11 @@ class AiService {
       `Preferred topics: ${preferredTopics.join(', ') || 'N/A'}`,
     ].join('\n');
 
-    const content = await this.#chat(prompt);
-    return this.#extractSuggestions(content);
+    const content = await this._chat(prompt);
+    return this._extractSuggestions(content);
   }
 
-  async #chat(prompt, context = {}) {
+  async _chat(prompt, context = {}) {
     try {
       const response = await axios.post(
         `${this.baseURL}/chat/completions`,
@@ -79,11 +79,11 @@ class AiService {
       return content;
     } catch (error) {
       // Fallback to local heuristic if API fails
-      return this.#fallbackSummary({});
+      return this._fallbackSummary({});
     }
   }
 
-  #fallbackSummary({ durationMinutes = 25, tasks = [], notes = '' }) {
+  _fallbackSummary({ durationMinutes = 25, tasks = [], notes = '' }) {
     const summary = `Session complete: ${durationMinutes} min. Focused on ${
       tasks[0] || 'your core skill'
     }. ${notes ? `Notes: ${notes}` : ''}`;
@@ -95,7 +95,7 @@ class AiService {
     return { summary, suggestions };
   }
 
-  #extractSuggestions(text) {
+  _extractSuggestions(text) {
     const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
     const candidates = lines.filter((l) => /^[\-\*\d]/.test(l));
     return candidates.slice(-5).map((l) => l.replace(/^[-*\d\.\s]+/, ''));

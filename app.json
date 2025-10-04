@@ -1,10 +1,32 @@
 {
+  "name": "lock-in",
+  "version": "1.0.0",
   "expo": {
     "name": "LockIn",
     "slug": "lock-in",
     "version": "1.0.0",
     "orientation": "portrait",
-    "platforms": ["ios", "android", "web"],
-    "sdkVersion": "54.0.0"
+    "icon": "./android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+        "backgroundColor": "#0F172A"
+      }
+    },
+    "web": {
+      "favicon": "./android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    }
   }
 }

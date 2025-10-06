@@ -13,9 +13,9 @@ import SplashScreen from './src/screens/SplashScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import DashboardHome from './src/screens/DashboardHome';
 import ProgressTracking from './src/screens/ProgressTracking';
-import CommunityFeed from './src/screens/CommunityFeed';
 import LockInLearn from './src/screens/LockInLearn';
 import UserProfile from './src/screens/UserProfile';
+import LockmateComingSoon from './src/screens/LockmateComingSoon';
 
 // Import theme
 import { Colors, DarkTheme } from './src/theme/AppTheme';
@@ -41,7 +41,7 @@ function BottomTabNavigator() {
           if (route.name === 'Dashboard') iconName = 'home';
           else if (route.name === 'Progress') iconName = 'timeline';
           else if (route.name === 'LOCK IN') iconName = 'school';
-          else if (route.name === 'Community') iconName = 'people';
+          else if (route.name === 'LOCKMATE') iconName = 'smart-toy';
           else if (route.name === 'Profile') iconName = 'person';
 
           return <MaterialIcons name={iconName} size={size} color={color} />;
@@ -66,7 +66,7 @@ function BottomTabNavigator() {
       <Tab.Screen name="Dashboard" component={DashboardHome} />
       <Tab.Screen name="Progress" component={ProgressTracking} />
       <Tab.Screen name="LOCK IN" component={LockInLearn} />
-      <Tab.Screen name="Community" component={CommunityFeed} />
+      <Tab.Screen name="LOCKMATE" component={LockmateComingSoon} />
       <Tab.Screen name="Profile" component={UserProfile} />
     </Tab.Navigator>
   );

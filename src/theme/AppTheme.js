@@ -21,15 +21,15 @@ export const Colors = {
   successLight: '#059669', // Deeper green for confirmation states
   warningLight: '#DC2626', // Clear red for important alerts
 
-  // Dark theme colors
-  primaryDark: '#3B82F6', // Lighter blue for dark backgrounds
-  secondaryDark: '#34D399', // Brighter green for dark mode
-  accentDark: '#FBBF24', // Brighter amber for dark visibility
-  backgroundDark: '#0F172A', // Deep dark blue-gray
-  surfaceDark: '#1E293B', // Elevated surface color
-  textPrimaryDark: '#F8FAFC', // Near-white for readability
-  textSecondaryDark: '#94A3B8', // Light gray for supporting text
-  borderSubtleDark: '#334155', // Subtle borders for dark mode
+  // Dark theme colors (ChatGPT-like palette)
+  primaryDark: '#10A37F', // ChatGPT green
+  secondaryDark: '#2EA27E',
+  accentDark: '#10A37F',
+  backgroundDark: '#343541', // ChatGPT background
+  surfaceDark: '#202123', // ChatGPT sidebar/cards
+  textPrimaryDark: '#ECECF1',
+  textSecondaryDark: '#ACACBE',
+  borderSubtleDark: '#3F414A',
   successDark: '#10B981', // Consistent success green
   warningDark: '#EF4444', // Bright red for dark mode alerts
 

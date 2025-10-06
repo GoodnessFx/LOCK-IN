@@ -215,7 +215,7 @@ const DashboardHome = () => {
         }
         showsVerticalScrollIndicator={false}
       >
-        {/* Custom App Bar with countdown timer and live clock at top-right */}
+        {/* Custom App Bar with countdown timer and live clock pinned top-right */}
         <View style={[styles.appBar, { backgroundColor: theme.colors.background }]}>
           <View style={styles.greetingContainer}>
             <Text style={[styles.greeting, Typography.titleLarge, { color: theme.colors.text }]}>
@@ -240,7 +240,7 @@ const DashboardHome = () => {
             <CountdownTimer 
               targetDate={targetDate} 
               backgroundColor={theme.colors.surface}
-              textStyle={{ color: theme.colors.accent }}
+              textStyle={{ ...Typography.labelMedium, color: theme.colors.accent, fontWeight: '600' }}
             />
             <View style={{ width: 8 }} />
             <LiveClock />
@@ -525,8 +525,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    top: responsiveHeight(2),
-    right: responsiveWidth(4),
+    top: responsiveHeight(1),
+    right: responsiveWidth(3),
+    backgroundColor: 'transparent',
   },
   greetingContainer: {
     flex: 1,

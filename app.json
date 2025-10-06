@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
         "backgroundColor": "#0F172A"
-      }
+      },
+      "newArchEnabled": false
     },
     "web": {
       "favicon": "./android/app/src/main/res/mipmap-hdpi/ic_launcher.png"

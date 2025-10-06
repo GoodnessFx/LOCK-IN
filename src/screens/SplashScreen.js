@@ -7,7 +7,7 @@ import {
   Dimensions,
   StatusBar,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -24,6 +24,7 @@ const SplashScreen = () => {
   const navigation = useNavigation();
   const [initializationProgress, setInitializationProgress] = useState(0);
   const [currentTask, setCurrentTask] = useState('Initializing...');
+  const [showBadge, setShowBadge] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   const backgroundAnim = useRef(new Animated.Value(0)).current;
@@ -74,6 +75,7 @@ const SplashScreen = () => {
       }
 
       await new Promise(resolve => setTimeout(resolve, 500));
+      setShowBadge(true);
       await navigateToNextScreen();
     } catch (error) {
       setHasError(true);
@@ -269,6 +271,15 @@ const SplashScreen = () => {
                 </View>
               )}
             </View>
+          {showBadge && (
+            <View style={styles.badgeOverlay} pointerEvents="none">
+              <View style={styles.badgeContainer}>
+                <CustomIcon name="emoji-events" size={36} color={Colors.accentLight} />
+                <Text style={[Typography.titleMedium, { color: 'white', marginTop: 8 }]}>Achievement Unlocked</Text>
+                <Text style={[Typography.bodySmall, { color: 'rgba(255,255,255,0.9)', marginTop: 2 }]}>Setup Complete</Text>
+              </View>
+            </View>
+          )}
           </Animated.View>
         </LinearGradient>
       </Animated.View>
@@ -340,6 +351,24 @@ const styles = StyleSheet.create({
   retryText: {
     marginLeft: 8,
     fontWeight: '500',
+  },
+  badgeOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.25)',
+  },
+  badgeContainer: {
+    backgroundColor: 'rgba(32,33,35,0.95)',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)'
   },
 });
 

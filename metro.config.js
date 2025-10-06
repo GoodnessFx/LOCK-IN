@@ -1,4 +1,5 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { getDefaultConfig } = require('expo/metro-config');
+const path = require('path');
 
 /**
  * Metro configuration
@@ -6,6 +7,16 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = {};
+const defaultConfig = getDefaultConfig(__dirname);
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+defaultConfig.resolver = {
+    ...defaultConfig.resolver,
+    extraNodeModules: {
+        ...(defaultConfig.resolver ? defaultConfig.resolver.extraNodeModules : {}),
+        'react-native-linear-gradient': path.resolve(__dirname, 'src/shims/react-native-linear-gradient'),
+        'react-native-fast-image': path.resolve(__dirname, 'src/shims/react-native-fast-image'),
+        'react-native-haptic-feedback': path.resolve(__dirname, 'src/shims/react-native-haptic-feedback'),
+    },
+};
+
+module.exports = defaultConfig;
